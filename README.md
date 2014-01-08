@@ -1,8 +1,9 @@
 flycheck-mercury
 ================
 
-This library provides a [flycheck][] checker for Mercury source code using the
-[Melbourne Mercury Compiler][]. See
+This library provides a [flycheck](https://github.com/flycheck/flycheck) checker
+for the logic / functional programming language Mercury using the [Melbourne
+Mercury Compiler](http://mercurylang.org/). See
 [here](https://github.com/flycheck/flycheck/pull/295) why it is not part of the
 `flycheck` codebase.
 
