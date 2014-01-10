@@ -2,10 +2,10 @@ flycheck-mercury
 ================
 
 This library provides a [flycheck](https://github.com/flycheck/flycheck) checker
-for the logic / functional programming language Mercury using the [Melbourne
-Mercury Compiler](http://mercurylang.org/). See
-[here](https://github.com/flycheck/flycheck/pull/295) why it is not part of the
-`flycheck` codebase.
+for the logic / functional programming language Mercury using the
+[Melbourne Mercury Compiler](http://mercurylang.org/). See
+[here](https://github.com/flycheck/flycheck/pull/295) for the reasons why it is
+not directy part of the `flycheck` codebase.
 
 `mmc` provides an *errorcheck-only* mode where it only displays errors and
 warning without doing any compilation.
@@ -13,10 +13,12 @@ warning without doing any compilation.
 Installation
 ------------
 
-`flycheck-mercury` is currently not available as Emacs 24 package.
+`flycheck-mercury` is available as Emacs 24 package on
+[MELPA](http://melpa.milkbox.net/).
 
-To use it, first ensure that `flycheck` is installed, then download this code
-and add the directory to your Emacs `load-path`.
+If you want to install the version from github, first ensure that `flycheck` is
+installed, then download this code and add the directory to your Emacs
+`load-path`.
 
 ```lisp
 (add-to-list 'load-path
