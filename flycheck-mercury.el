@@ -6,7 +6,7 @@
 ;; URL: https://github.com/flycheck/flycheck-mercury
 ;; Keywords: convenience languages tools
 ;; Version: 0.1-cvs
-;; Package-Requires: ((flycheck "0.15"))
+;; Package-Requires: ((flycheck "0.15") (s "1.9.0") (dash "2.4.0"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -29,6 +29,8 @@
 
 ;;; Code:
 
+(require 's)
+(require 'dash)
 (require 'flycheck)
 
 (flycheck-def-option-var flycheck-mmc-message-width 1000 mercury-mmc
