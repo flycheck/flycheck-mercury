@@ -44,22 +44,21 @@
   "List of directories to pass to option `-I` of mmc.")
 
 (defun flycheck-mmc-remove-redundant-errors (output)
-  "Removes redundant errors without line number from OUTPUT.
+  "Remove redundant errors without line number from OUTPUT.
 
-This function removes errors from the list of message lines in
-output where the message is prefixed with
-'mercury_compile:'.  These errors represent generated interfaces
-files etc. that cannot be located and do not have a line number
-associated.  The errors appear again later when the corresponding
-types etc. are used."
+Remove errors from the list of message lines in OUTPUT, where the
+message is prefixed with 'mercury-compile:' b.  These errors
+represent generated interfaces files, which cannot be located and
+do not have a line number associated.  The errors appear again
+later when the corresponding types are used."
     (-remove #'(lambda (zeile)
                  (s-starts-with? "mercury_compile:" zeile)) output))
 
 (defun flycheck-mmc-compute-line-desc-pairs (output)
   "Compute list of (linenumber . part of message) from OUTPUT.
 
-OUTPUT is the raw mercury warning / error message output of the format:
-'filename ':' linenumber ':' errormessage'."
+OUTPUT is the raw mercury warning / error message output of the
+format: 'filename ':' linenumber ':' errormessage'."
   (mapcar #'(lambda (num-desc)
               (cons (string-to-number (car num-desc))
                     (-reduce #'(lambda (zeile rest)
@@ -113,7 +112,7 @@ messages for that line number."
     "Parse the OUTPUT buffer, ignore CHECKER and BUFFER.
 
 Parses the Mercury warning / error output, provides interface
-for :error-parser functions for flycheck."
+for :error-parser functions for Flycheck."
     (let ((line-desc-pairs (flycheck-mmc-compute-line-desc-pairs output)))
       (let ((line-desc-maps (flycheck-mmc-compute-line-desc-maps line-desc-pairs)))
         (let ((final-list (flycheck-mmc-compute-final-list line-desc-maps)))
