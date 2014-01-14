@@ -5,7 +5,7 @@
 ;; Author: Matthias Güdemann <matthias.gudemann@gmail.com>
 ;; URL: https://github.com/flycheck/flycheck-mercury
 ;; Keywords: convenience languages tools
-;; Version: DEV
+;; Version: 0.1-cvs
 ;; Package-Requires: ((flycheck "0.15"))
 
 ;; This file is not part of GNU Emacs.
