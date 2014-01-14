@@ -5,8 +5,8 @@
 ;; Author: Matthias Güdemann <matthias.gudemann@gmail.com>
 ;; URL: https://github.com/flycheck/flycheck-mercury
 ;; Keywords: convenience languages tools
-;; Version: DEV
-;; Package-Requires: ((flycheck "0.15"))
+;; Version: 0.1-cvs
+;; Package-Requires: ((flycheck "0.15") (s "1.9.0") (dash "2.4.0"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -25,42 +25,43 @@
 
 ;;; Commentary:
 
-;; Add a Mercury checker to Flycheck using the Melbourne Mercury Compiler
+;; Add a Mercury checker to Flycheck using the Melbourne Mercury Compiler.
 
 ;;; Code:
 
+(require 's)
+(require 'dash)
 (require 'flycheck)
 
-(add-to-list 'flycheck-checkers
-             'mercury-mmc)
+(flycheck-def-option-var flycheck-mmc-message-width 1000 mercury-mmc
+  "Max width to pass to option `--max-error-line-width' of mmc."
+  :type 'integer
+  :safe #'integerp)
 
-(defvar flycheck-mmc-message-width 1000
-  "Max width to pass to option `--max-error-line-width` of mmc.")
-
-(defvar flycheck-mmc-interface-dirs
-  '("Mercury/ints"
-    "Mercury/int0s"
-    "Mercury/int2s"
-    "Mercury/int3s")
-  "List of directories to pass to option `-I` of mmc.")
+(flycheck-def-option-var flycheck-mcc-interface-dirs
+    '("Mercury/ints"
+      "Mercury/int0s"
+      "Mercury/int2s"
+      "Mercury/int3s")
+    mercury-mcc
+  "List of interface directories to pass to option `-I' of mmc.")
 
 (defun flycheck-mmc-remove-redundant-errors (output)
-  "Removes redundant errors without line number from OUTPUT.
+  "Remove redundant errors without line number from OUTPUT.
 
-This function removes errors from the list of message lines in
-output where the message is prefixed with
-'mercury_compile:'.  These errors represent generated interfaces
-files etc. that cannot be located and do not have a line number
-associated.  The errors appear again later when the corresponding
-types etc. are used."
+Remove errors from the list of message lines in OUTPUT, where the
+message is prefixed with 'mercury-compile:' b.  These errors
+represent generated interfaces files, which cannot be located and
+do not have a line number associated.  The errors appear again
+later when the corresponding types are used."
     (-remove #'(lambda (zeile)
                  (s-starts-with? "mercury_compile:" zeile)) output))
 
 (defun flycheck-mmc-compute-line-desc-pairs (output)
   "Compute list of (linenumber . part of message) from OUTPUT.
 
-OUTPUT is the raw mercury warning / error message output of the format:
-'filename ':' linenumber ':' errormessage'."
+OUTPUT is the raw mercury warning / error message output of the
+format: 'filename ':' linenumber ':' errormessage'."
   (mapcar #'(lambda (num-desc)
               (cons (string-to-number (car num-desc))
                     (-reduce #'(lambda (zeile rest)
@@ -110,11 +111,11 @@ messages for that line number."
           final-list))
 
 (eval-and-compile
-  (defun flycheck-mmc-error-parser (output checker buffer)
+  (defun flycheck-mmc-error-parser (output _checker _buffer)
     "Parse the OUTPUT buffer, ignore CHECKER and BUFFER.
 
 Parses the Mercury warning / error output, provides interface
-for :error-parser functions for flycheck."
+for :error-parser functions for Flycheck."
     (let ((line-desc-pairs (flycheck-mmc-compute-line-desc-pairs output)))
       (let ((line-desc-maps (flycheck-mmc-compute-line-desc-maps line-desc-pairs)))
         (let ((final-list (flycheck-mmc-compute-final-list line-desc-maps)))
@@ -127,7 +128,7 @@ See URL `http://mercurylang.org/'."
   :command ("mmc"
             "-E"
             "-e"
-	    (option-list "-I" flycheck-mmc-interface-dirs)
+            (option-list "-I" flycheck-mmc-interface-dirs)
             (option "--max-error-line-width"
                     flycheck-mmc-message-width
                     flycheck-option-int)
@@ -135,11 +136,13 @@ See URL `http://mercurylang.org/'."
   :error-parser flycheck-mmc-error-parser
   :modes (mercury-mode prolog-mode))
 
+(add-to-list 'flycheck-checkers 'mercury-mmc)
 
 (provide 'flycheck-mercury)
 
 ;; Local Variables:
 ;; coding: utf-8
+;; indent-tabs-mode: nil
 ;; End:
 
 ;;; flycheck-mercury.el ends here
