@@ -52,8 +52,11 @@ should be sufficient to add their location relative to the checked file to
 `flycheck-mmc-interface-dirs`, i.e., using:
 
 ```lisp
-(add-to-list 'flycheck-mmc-interface-dirs <interface-directory>)
+(add-to-list 'flycheck-mmc-interface-dirs "<interface-directory>")
 ```
+
+This list defaults to `("Mercury/ints" "Mercury/int0s" "Mercury/int2s"
+Mercury/int3s")`, i.e., the directory structure created by `mmc --make`.
 
 License
 -------
