@@ -108,7 +108,7 @@ messages for that line number."
           final-list))
 
 (eval-and-compile
-  (defun flycheck-mmc-error-parser (output checker buffer)
+  (defun flycheck-mmc-error-parser (output _checker _buffer)
     "Parse the OUTPUT buffer, ignore CHECKER and BUFFER.
 
 Parses the Mercury warning / error output, provides interface
