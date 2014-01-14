@@ -126,7 +126,7 @@ See URL `http://mercurylang.org/'."
   :command ("mmc"
             "-E"
             "-e"
-	    (option-list "-I" flycheck-mmc-interface-dirs)
+            (option-list "-I" flycheck-mmc-interface-dirs)
             (option "--max-error-line-width"
                     flycheck-mmc-message-width
                     flycheck-option-int)
@@ -139,6 +139,7 @@ See URL `http://mercurylang.org/'."
 
 ;; Local Variables:
 ;; coding: utf-8
+;; indent-tabs-mode: nil
 ;; End:
 
 ;;; flycheck-mercury.el ends here
