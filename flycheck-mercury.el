@@ -31,15 +31,18 @@
 
 (require 'flycheck)
 
-(defvar flycheck-mmc-message-width 1000
-  "Max width to pass to option `--max-error-line-width` of mmc.")
+(flycheck-def-option-var flycheck-mmc-message-width 1000 mercury-mmc
+  "Max width to pass to option `--max-error-line-width' of mmc."
+  :type 'integer
+  :safe #'integerp)
 
-(defvar flycheck-mmc-interface-dirs
-  '("Mercury/ints"
-    "Mercury/int0s"
-    "Mercury/int2s"
-    "Mercury/int3s")
-  "List of directories to pass to option `-I` of mmc.")
+(flycheck-def-option-var flycheck-mcc-interface-dirs
+    '("Mercury/ints"
+      "Mercury/int0s"
+      "Mercury/int2s"
+      "Mercury/int3s")
+    mercury-mcc
+  "List of interface directories to pass to option `-I' of mmc.")
 
 (defun flycheck-mmc-remove-redundant-errors (output)
   "Remove redundant errors without line number from OUTPUT.
