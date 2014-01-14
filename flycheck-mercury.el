@@ -133,7 +133,6 @@ See URL `http://mercurylang.org/'."
   :error-parser flycheck-mmc-error-parser
   :modes (mercury-mode prolog-mode))
 
-
 (provide 'flycheck-mercury)
 
 ;; Local Variables:
