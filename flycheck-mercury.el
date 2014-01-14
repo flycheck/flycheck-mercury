@@ -35,7 +35,14 @@
              'mercury-mmc)
 
 (defvar flycheck-mmc-message-width 1000
-  "Max width to pass to mmc --max-error-line-width.")
+  "Max width to pass to option `--max-error-line-width` of mmc.")
+
+(defvar flycheck-mmc-interface-dirs
+  '("Mercury/ints"
+    "Mercury/int0s"
+    "Mercury/int2s"
+    "Mercury/int3s")
+  "List of directories to pass to option `-I` of mmc.")
 
 (defun flycheck-mmc-remove-redundant-errors (output)
   "Removes redundant errors without line number from OUTPUT.
@@ -120,6 +127,7 @@ See URL `http://mercurylang.org/'."
   :command ("mmc"
             "-E"
             "-e"
+	    (option-list "-I" flycheck-mmc-interface-dirs)
             (option "--max-error-line-width"
                     flycheck-mmc-message-width
                     flycheck-option-int)
