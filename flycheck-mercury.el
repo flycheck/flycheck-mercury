@@ -31,8 +31,6 @@
 
 (require 'flycheck)
 
-(add-to-list 'flycheck-checkers 'mercury-mmc)
-
 (defvar flycheck-mmc-message-width 1000
   "Max width to pass to option `--max-error-line-width` of mmc.")
 
@@ -132,6 +130,8 @@ See URL `http://mercurylang.org/'."
             source)
   :error-parser flycheck-mmc-error-parser
   :modes (mercury-mode prolog-mode))
+
+(add-to-list 'flycheck-checkers 'mercury-mmc)
 
 (provide 'flycheck-mercury)
 
