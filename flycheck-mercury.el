@@ -38,6 +38,12 @@
   :type 'integer
   :safe #'integerp)
 
+(flycheck-def-option-var flycheck-mmc-max-message-width 0 mercury-mmc
+  "Truncate messages longer than `flycheck-mmc-max-message-width`.
+  A value of 0 prevents truncating."
+  :type 'integer
+  :safe #'integerp)
+
 (flycheck-def-option-var flycheck-mmc-interface-dirs
     '("Mercury/ints"
       "Mercury/int0s"
@@ -57,6 +63,16 @@ later when the corresponding types are used."
     (-remove #'(lambda (zeile)
                  (s-starts-with? "mercury_compile:" zeile)) output))
 
+(defun flycheck-mmc-truncate-message-length (message)
+  "Truncate MESSAGE according to `flycheck-mmc-max-message-width`.
+
+If `flycheck-mmc-max-message-width` has a positive value, MESSAGE
+is truncated to this length - 3 and `...` is added at the end.
+Any value less than or equal to zero has no effect."
+  (if (>= 0 flycheck-mmc-max-message-width)
+      message
+    (s-truncate flycheck-mmc-max-message-width message)))
+
 (defun flycheck-mmc-compute-line-desc-pairs (output)
   "Compute list of (linenumber . part of message) from OUTPUT.
 
@@ -64,10 +80,11 @@ OUTPUT is the raw mercury warning / error message output of the
 format: 'filename ':' linenumber ':' errormessage'."
   (mapcar #'(lambda (num-desc)
               (cons (string-to-number (car num-desc))
-                    (s-chop-prefix " "
-                     (-reduce #'(lambda (zeile rest)
-                                  (concat zeile ":" rest))
-                              (cdr num-desc)))))
+                    (flycheck-mmc-truncate-message-length
+                     (s-chop-prefix " "
+                                    (-reduce #'(lambda (zeile rest)
+                                                 (concat zeile ":" rest))
+                                             (cdr num-desc))))))
           (-remove #'(lambda (x) (eq x nil))
                    (mapcar #'(lambda (zeile)
                                (cdr (split-string zeile ":")))
