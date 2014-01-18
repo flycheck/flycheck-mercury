@@ -62,10 +62,22 @@ Mercury/int3s")`, i.e., the directory structure created by `mmc --make`.
 User Options
 ------------
 
+The user options are defined via *buffer-local* variables. To change their
+default value for new buffers use:
+
+```lisp
+(setq-default <variable> <new-value>)
+```
+
 `flycheck-mmc-max-message-width` defines the maximal length of a message line.
 If the specified value is strictly positive, the line is truncated to this
 length and `...` is added at the end (using `s-truncate`). A value less than or
 equal to `0` has no effect. The default value is `0`.
+
+`flycheck-mmc-max-message-lines` defines the maximal number of message lines for
+a single source line.  If the specified value is strictly positive, the messages
+are limited to this number of lines and `...` is added as final line. A value
+less than or equal to `0` has no effect. The default value is `0`.
 
 
 License
