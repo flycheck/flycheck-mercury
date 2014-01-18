@@ -2,10 +2,10 @@ flycheck-mercury
 ================
 
 This library provides a [flycheck](https://github.com/flycheck/flycheck) checker
-for the logic / functional programming language Mercury using the
-[Melbourne Mercury Compiler](http://mercurylang.org/). See
+for the logic / functional programming language Mercury using the [Melbourne
+Mercury Compiler](http://mercurylang.org/). See
 [here](https://github.com/flycheck/flycheck/pull/295) for the reasons why it is
-not directy part of the `flycheck` codebase.
+not directly part of the `flycheck` codebase.
 
 `mmc` provides an *errorcheck-only* mode where it only displays errors and
 warning without doing any compilation.
@@ -48,15 +48,25 @@ etc. However, it will supply the option `-I` to `mmc` in order to search for
 interface files in the directories contained in the list
 `flycheck-mmc-interface-dirs`. These directories are relative to the position of
 the file to check. If interfaces are reported as missing that actually exist, it
-should be sufficient to add their location relative to the checked file to
-`flycheck-mmc-interface-dirs`, i.e., using:
+should be sufficient to add their location relative to the checked file to the
+buffer-local variable `flycheck-mmc-interface-dirs`,
 
 ```lisp
-(add-to-list 'flycheck-mmc-interface-dirs "<interface-directory>")
+(setq-default 'flycheck-mmc-interface-dirs '("<interface-directories>"))
 ```
 
 This list defaults to `("Mercury/ints" "Mercury/int0s" "Mercury/int2s"
 Mercury/int3s")`, i.e., the directory structure created by `mmc --make`.
+
+
+User Options
+------------
+
+`flycheck-mmc-max-message-width` defines the maximal length of a message line.
+If the specified value is strictly positive, the line is truncated to this
+length and `...` is added at the end (using `s-truncate`). A value less than or
+equal to `0` has no effect. The default value is `0`.
+
 
 License
 -------
