@@ -38,12 +38,12 @@
   :type 'integer
   :safe #'integerp)
 
-(flycheck-def-option-var flycheck-mcc-interface-dirs
+(flycheck-def-option-var flycheck-mmc-interface-dirs
     '("Mercury/ints"
       "Mercury/int0s"
       "Mercury/int2s"
       "Mercury/int3s")
-    mercury-mcc
+    mercury-mmc
   "List of interface directories to pass to option `-I' of mmc.")
 
 (defun flycheck-mmc-remove-redundant-errors (output)
