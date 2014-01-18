@@ -44,6 +44,12 @@
   :type 'integer
   :safe #'integerp)
 
+(flycheck-def-option-var flycheck-mmc-max-message-lines 0 mercury-mmc
+  "Truncate messages with more lines than `flycheck-mmc-max-message-lines`.
+  A value of 0 prevents truncating."
+  :type 'integer
+  :safe #'integerp)
+
 (flycheck-def-option-var flycheck-mmc-interface-dirs
     '("Mercury/ints"
       "Mercury/int0s"
@@ -91,6 +97,21 @@ format: 'filename ':' linenumber ':' errormessage'."
                            (flycheck-mmc-remove-redundant-errors
                             (split-string output "\n"))))))
 
+(defun flycheck-mmc-truncate-message-lines (num-desc-list)
+  "Truncate NUM-DESC-LIST according to `flycheck-mmc-max-message-lines`.
+
+If `flycheck-mmc-max-message-lines` has a positive value, the
+number of message lines per source line is truncated to that
+value and `...` is added as last line.  Any value less than or
+equal to zero has no effect."
+  (if (>= 0 flycheck-mmc-max-message-lines)
+      num-desc-list
+    (if (<= (length num-desc-list) flycheck-mmc-max-message-lines)
+        num-desc-list
+      (append
+       (-take flycheck-mmc-max-message-lines num-desc-list)
+       (list (cons (caar num-desc-list) "..."))))))
+
 (defun flycheck-mmc-compute-line-desc-maps (line-desc-pairs)
   "Compute map of line numbers to messages from LINE-DESC-PAIRS.
 
@@ -98,11 +119,12 @@ The input list of pairs of linenumbers and messages is
 transformed to a list of lists where each sublist is a list of
 cons cells containing the linenumber and message part.  The
 result is grouped for line numbers."
-  (mapcar #'(lambda (elem)
-              (-filter #'(lambda (x)
-                           (eq (car x) elem)) line-desc-pairs))
-          (delete-dups (mapcar #'(lambda (line-desc)
-                                   (car line-desc)) line-desc-pairs))))
+  (mapcar #'flycheck-mmc-truncate-message-lines
+          (mapcar #'(lambda (elem)
+                      (-filter #'(lambda (x)
+                                   (eq (car x) elem)) line-desc-pairs))
+                  (delete-dups (mapcar #'(lambda (line-desc)
+                                           (car line-desc)) line-desc-pairs)))))
 
 (defun flycheck-mmc-compute-final-list (line-desc-maps)
   "Compute alist from LINE-DESC-MAPS.
