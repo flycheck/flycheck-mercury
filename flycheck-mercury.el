@@ -64,9 +64,10 @@ OUTPUT is the raw mercury warning / error message output of the
 format: 'filename ':' linenumber ':' errormessage'."
   (mapcar #'(lambda (num-desc)
               (cons (string-to-number (car num-desc))
-                    (-reduce #'(lambda (zeile rest)
-                                 (concat zeile ":" rest))
-                             (cdr num-desc))))
+                    (s-chop-prefix " "
+                     (-reduce #'(lambda (zeile rest)
+                                  (concat zeile ":" rest))
+                              (cdr num-desc)))))
           (-remove #'(lambda (x) (eq x nil))
                    (mapcar #'(lambda (zeile)
                                (cdr (split-string zeile ":")))
