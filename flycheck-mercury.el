@@ -58,26 +58,33 @@
     mercury-mmc
   "List of interface directories to pass to option `-I' of mmc.")
 
-(defun flycheck-mmc-remove-redundant-errors (output)
-  "Remove redundant errors without line number from OUTPUT.
+(defun flycheck-mmc-assign-error-line (output)
+  "Assigns line 1 to errors without line number from OUTPUT.
 
-Remove errors from the list of message lines in OUTPUT, where the
-message is prefixed with 'mercury-compile:' b.  These errors
-represent generated interfaces files, which cannot be located and
-do not have a line number associated.  The errors appear again
-later when the corresponding types are used.
-
-Also removes:
+Some errors do not have a line number assigned, these are the
+lines starting with one of:
  * Uncaught Mercury exception
  * Software Error
- * message to use `-E' option for more errors
-as these messages do not have an associated line number."
-    (-remove #'(lambda (zeile)
-                 (or
-                  (s-starts-with? "mercury_compile:" zeile)
-                  (s-starts-with? "For more information, recompile with `-E'." zeile)
-                  (s-starts-with? "Uncaught Mercury exception:" zeile)
-                  (s-starts-with? "Software Error:" zeile))) output))
+ * mercury_compile
+ * with whitespace
+instead of `filename' `:' `line-number' `:'.
+
+We assigne line 1 to these errors as they in general represent
+errors concerning the whole module file.  This avoids having a
+checker that returns error, but does not display error messages.
+
+Removes message to use `-E' option for more information on errors
+for very long error messages."
+  (let ((prefix-list '("mercury_compile:" "Uncaught Mercury exception:"
+                       "Software Error:" "  ")))
+    (-map #'(lambda (zeile)
+              (if (-any? #'(lambda (prefix)
+                             (s-starts-with? prefix zeile)) prefix-list)
+                  (s-append (s-chop-prefixes prefix-list zeile) "foo:001:")
+                zeile))
+          (-remove #'(lambda (zeile)
+                       (s-starts-with? "For more information, recompile with `-E'." zeile))
+                   output))))
 
 (defun flycheck-mmc-truncate-message-length (message)
   "Truncate MESSAGE according to `flycheck-mmc-max-message-width`.
@@ -104,7 +111,7 @@ format: 'filename ':' linenumber ':' errormessage'."
           (-remove #'(lambda (x) (eq x nil))
                    (mapcar #'(lambda (zeile)
                                (cdr (split-string zeile ":")))
-                           (flycheck-mmc-remove-redundant-errors
+                           (flycheck-mmc-assign-error-line
                             (split-string output "\n"))))))
 
 (defun flycheck-mmc-truncate-message-lines (num-desc-list)
