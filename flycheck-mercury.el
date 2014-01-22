@@ -67,11 +67,17 @@ represent generated interfaces files, which cannot be located and
 do not have a line number associated.  The errors appear again
 later when the corresponding types are used.
 
-Also remove message to use `-E' option for more errors."
+Also removes:
+ * Uncaught Mercury exception
+ * Software Error
+ * message to use `-E' option for more errors
+as these messages do not have an associated line number."
     (-remove #'(lambda (zeile)
                  (or
                   (s-starts-with? "mercury_compile:" zeile)
-                  (s-starts-with? "For more information, recompile with `-E'." zeile))) output))
+                  (s-starts-with? "For more information, recompile with `-E'." zeile)
+                  (s-starts-with? "Uncaught Mercury exception:" zeile)
+                  (s-starts-with? "Software Error:" zeile))) output))
 
 (defun flycheck-mmc-truncate-message-length (message)
   "Truncate MESSAGE according to `flycheck-mmc-max-message-width`.
@@ -149,9 +155,9 @@ messages for that line number."
   (mapcar #'(lambda (x)
               (flycheck-error-new :line (car x)
                                   :message (cadr x)
-                                  :level (if (string-match "rror" (cadr x))
-                                             'error
-                                           'warning)))
+                                  :level (if (string-match "arning" (cadr x))
+                                             'warning
+                                           'error)))
           final-list))
 
 (eval-and-compile
