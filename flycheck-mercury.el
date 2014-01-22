@@ -65,9 +65,13 @@ Remove errors from the list of message lines in OUTPUT, where the
 message is prefixed with 'mercury-compile:' b.  These errors
 represent generated interfaces files, which cannot be located and
 do not have a line number associated.  The errors appear again
-later when the corresponding types are used."
+later when the corresponding types are used.
+
+Also remove message to use `-E' option for more errors."
     (-remove #'(lambda (zeile)
-                 (s-starts-with? "mercury_compile:" zeile)) output))
+                 (or
+                  (s-starts-with? "mercury_compile:" zeile)
+                  (s-starts-with? "For more information, recompile with `-E'." zeile))) output))
 
 (defun flycheck-mmc-truncate-message-length (message)
   "Truncate MESSAGE according to `flycheck-mmc-max-message-width`.
@@ -166,7 +170,6 @@ for :error-parser functions for Flycheck."
 
 See URL `http://mercurylang.org/'."
   :command ("mmc"
-            "-E"
             "-e"
             (option-list "-I" flycheck-mmc-interface-dirs)
             (option "--max-error-line-width"
