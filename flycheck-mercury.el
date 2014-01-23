@@ -148,14 +148,12 @@ result is grouped for line numbers."
 
 Computes an alist from the line numbers to the concatenation of
 messages for that line number."
-  (mapcar #'(lambda (x)
-              (cons (car x) (split-string (cdr x) "\\. ")))
-          (mapcar #'(lambda (entry)
-                        (cons (car (car entry))
-                              (-reduce #'(lambda (prefix rest)
-                                           (concat prefix rest "\n"))
-                                       (cons "" (mapcar #'cdr entry)))))
-                    line-desc-maps)))
+  (mapcar #'(lambda (entry)
+              (list (car (car entry))
+                    (-reduce #'(lambda (prefix rest)
+                                 (concat prefix rest "\n"))
+                             (cons "" (mapcar #'cdr entry)))))
+          line-desc-maps))
 
 (defun flycheck-mmc-compute-flycheck-errors (final-list)
   "Compute the list fo flycheck-error objects from FINAL-LIST."
