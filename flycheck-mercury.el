@@ -160,9 +160,11 @@ messages for that line number."
   (mapcar #'(lambda (x)
               (flycheck-error-new :line (car x)
                                   :message (cadr x)
-                                  :level (if (string-match "arning" (cadr x))
-                                             'warning
-                                           'error)))
+                                  :level (if (string-match "rror" (cadr x))
+                                             'error
+                                           (if (string-match "arning" (cadr x))
+                                               'warning
+                                             'error))))
           final-list))
 
 (eval-and-compile
