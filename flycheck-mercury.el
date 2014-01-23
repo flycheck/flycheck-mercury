@@ -110,9 +110,9 @@ format: 'filename ':' linenumber ':' errormessage'."
                                              (cdr num-desc))))))
           (-remove #'(lambda (x) (eq x nil))
                    (mapcar #'(lambda (zeile)
-                               (cdr (split-string zeile ":")))
+                               (cdr (s-split ":" zeile)))
                            (flycheck-mmc-assign-error-line
-                            (split-string output "\n"))))))
+                            (s-split "\n" output))))))
 
 (defun flycheck-mmc-truncate-message-lines (num-desc-list)
   "Truncate NUM-DESC-LIST according to `flycheck-mmc-max-message-lines`.
