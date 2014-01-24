@@ -10,6 +10,8 @@ not directly part of the `flycheck` codebase.
 `mmc` provides an *errorcheck-only* mode where it only displays errors and
 warning without doing any compilation.
 
+![Emacs Screenshot with flycheck-mercury][https://github.com/flycheck/flycheck-mercury/raw/master/flycheck-mercury-screenshot.png]
+
 Installation
 ------------
 
