@@ -160,11 +160,13 @@ messages for that line number."
   (mapcar #'(lambda (x)
               (flycheck-error-new :line (car x)
                                   :message (cadr x)
-                                  :level (if (string-match "rror" (cadr x))
-                                             'error
-                                           (if (string-match "arning" (cadr x))
-                                               'warning
-                                             'error))))
+                                  :level (cond ((string-match "rror" (cadr x))
+                                                'error)
+                                               ((string-match "arning" (cadr x))
+                                                'warning)
+                                               ((string-match "nferred" (cadr x))
+                                                'info)
+                                               ((t 'error)))))
           final-list))
 
 (eval-and-compile
@@ -184,6 +186,7 @@ for :error-parser functions for Flycheck."
 See URL `http://mercurylang.org/'."
   :command ("mmc"
             "-e"
+            "--infer-all"
             (option-list "-I" flycheck-mmc-interface-dirs)
             (option "--max-error-line-width"
                     flycheck-mmc-message-width
