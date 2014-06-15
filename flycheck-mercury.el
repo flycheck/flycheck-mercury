@@ -166,7 +166,7 @@ messages for that line number."
                                                 'warning)
                                                ((string-match "nferred" (cadr x))
                                                 'info)
-                                               ((t 'error)))))
+                                               (t 'error))))
           final-list))
 
 (eval-and-compile
