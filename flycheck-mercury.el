@@ -189,7 +189,7 @@ See URL `http://mercurylang.org/'."
             "--infer-all"
             (option-list "-I" flycheck-mmc-interface-dirs)
             (option "--max-error-line-width"
-                    flycheck-mmc-message-width
+                    flycheck-mmc-message-width nil
                     flycheck-option-int)
             source)
   :error-parser flycheck-mmc-error-parser
