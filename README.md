@@ -1,7 +1,7 @@
 flycheck-mercury
 ================
 
-This library provides a [flycheck](https://github.com/flycheck/flycheck) checker
+This library provides a [Flycheck](https://github.com/flycheck/flycheck) checker
 for the logic / functional programming language Mercury using the [Melbourne
 Mercury Compiler](http://mercurylang.org/). See
 [here](https://github.com/flycheck/flycheck/pull/295) for the reasons why it is
@@ -59,6 +59,17 @@ buffer-local variable `flycheck-mmc-interface-dirs`,
 
 This list defaults to `("Mercury/ints" "Mercury/int0s" "Mercury/int2s"
 Mercury/int3s")`, i.e., the directory structure created by `mmc --make`.
+
+So, in order to make `mmc-flycheck` recognize any newly added predicate, you
+must first create its corresponding `.int` file, e.g., by launching a
+compilation of your program.
+
+Output
+------
+
+`mmc-flycheck` uses all three levels of error reporting: `error` for things
+which prevent correct compilation, `warning` for things like unused variables
+etc. which does not prevent compilation and `info` for inferred type signatures.
 
 
 User Options
