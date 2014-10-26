@@ -16,7 +16,7 @@ Installation
 ------------
 
 `flycheck-mercury` is available as Emacs 24 package on
-[MELPA](http://melpa.milkbox.net/).
+[MELPA](http://melpa.org/).
 
 If you want to install the version from github, first ensure that `flycheck` is
 installed, then download this code and add the directory to your Emacs
