@@ -1,3 +1,5 @@
+[![MELPA](http://melpa.org/packages/flycheck-mercury-badge.svg)](http://melpa.org/#/flycheck-mercury)
+
 flycheck-mercury
 ================
 
