@@ -43,13 +43,13 @@ Usage
 -----
 
 When `flycheck` is enabled (e.g. with `global-flycheck-mode`), Mercury buffers
-will be automatically checked using this checker if you have prolog-mode
-with support for Mercury installed.
+will be automatically checked using this checker if you have prolog-mode with
+support for Mercury installed.
 
-`flycheck-mercury` does not create any files, this includes interface files
-(`*.int`, `*.int{0,2,3}`) required to correctly identify type information
-etc. However, it will supply the option `-I` to `mmc` in order to search for
-interface files in the directories contained in the list
+`mercury-mmc` does *not* create any files, this includes interface files
+(`*.int`, `*.int{0,2,3}`) which are required to correctly identify type
+information etc. However, it will supply the option `-I` to `mmc` in order to
+search for interface files in the directories contained in the list
 `flycheck-mmc-interface-dirs`. These directories are relative to the position of
 the file to check. If interfaces are reported as missing that actually exist, it
 should be sufficient to add their location relative to the checked file to the
@@ -62,17 +62,16 @@ buffer-local variable `flycheck-mmc-interface-dirs`,
 This list defaults to `("Mercury/ints" "Mercury/int0s" "Mercury/int2s"
 Mercury/int3s")`, i.e., the directory structure created by `mmc --make`.
 
-So, in order to make `mmc-flycheck` recognize any newly added predicate, you
-must first create its corresponding `.int` file, e.g., by launching a
-compilation of your program.
+So, in order to make `mercury-mmc` recognize any newly added predicate, you must
+first create its corresponding interface files, e.g., by launching a compilation
+of your program.
 
 Output
 ------
 
-`mmc-flycheck` uses all three levels of error reporting: `error` for things
-which prevent correct compilation, `warning` for things like unused variables
+`mercury-mmc` uses all three levels of error reporting: `error` for things which
+prevent correct compilation, `warning` for things like unused variables
 etc. which does not prevent compilation and `info` for inferred type signatures.
-
 
 User Options
 ------------
