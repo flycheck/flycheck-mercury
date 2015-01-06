@@ -155,11 +155,15 @@ messages for that line number."
                              (cons "" (mapcar #'cdr entry)))))
           line-desc-maps))
 
-(defun flycheck-mmc-compute-flycheck-errors (final-list)
-  "Compute the list fo flycheck-error objects from FINAL-LIST."
+(defun flycheck-mmc-compute-flycheck-errors (final-list filename buffer)
+  "Compute the list fo flycheck-error objects from FINAL-LIST.
+
+Pass FILENAME and BUFFER object to Flycheck."
   (mapcar #'(lambda (x)
               (flycheck-error-new :line (car x)
                                   :message (cadr x)
+                                  :filename filename
+                                  :buffer buffer
                                   :level (cond ((string-match "rror" (cadr x))
                                                 'error)
                                                ((string-match "arning" (cadr x))
@@ -170,15 +174,16 @@ messages for that line number."
           final-list))
 
 (eval-and-compile
-  (defun flycheck-mmc-error-parser (output _checker _buffer)
-    "Parse the OUTPUT buffer, ignore CHECKER and BUFFER.
+  (defun flycheck-mmc-error-parser (output _checker buffer)
+    "Parse the OUTPUT and pass BUFFER to Flycheck, ignore CHECKER.
 
 Parses the Mercury warning / error output, provides interface
 for :error-parser functions for Flycheck."
-    (let ((line-desc-pairs (flycheck-mmc-compute-line-desc-pairs output)))
-      (let ((line-desc-maps (flycheck-mmc-compute-line-desc-maps line-desc-pairs)))
-        (let ((final-list (flycheck-mmc-compute-final-list line-desc-maps)))
-          (flycheck-mmc-compute-flycheck-errors final-list))))))
+    (let ((filename (first (s-split-up-to ":" output 1))))
+      (let ((line-desc-pairs (flycheck-mmc-compute-line-desc-pairs output)))
+        (let ((line-desc-maps (flycheck-mmc-compute-line-desc-maps line-desc-pairs)))
+          (let ((final-list (flycheck-mmc-compute-final-list line-desc-maps)))
+            (flycheck-mmc-compute-flycheck-errors final-list filename buffer)))))))
 
 (flycheck-define-checker mercury-mmc
   "A Mercury syntax and type checker using mmc.
