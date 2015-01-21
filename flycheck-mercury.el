@@ -164,6 +164,7 @@ Pass FILENAME and BUFFER object to Flycheck."
                                   :message (cadr x)
                                   :filename filename
                                   :buffer buffer
+                                  :checker 'mercury-mmc
                                   :level (cond ((string-match "rror" (cadr x))
                                                 'error)
                                                ((string-match "arning" (cadr x))
