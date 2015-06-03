@@ -33,6 +33,11 @@
 (require 'dash)
 (require 'flycheck)
 
+(flycheck-def-option-var flycheck-mmc-report-inferred t mercury-mmc
+  "Report inferred types, modes and determinism as `info' level."
+  :type 'booleanp
+  :safe #'booleanp)
+
 (flycheck-def-option-var flycheck-mmc-message-width 1000 mercury-mmc
   "Max width to pass to option `--max-error-line-width' of mmc."
   :type 'integer
@@ -155,6 +160,14 @@ messages for that line number."
                              (cons "" (mapcar #'cdr entry)))))
           line-desc-maps))
 
+(defun flycheck-mmc-remove-unwanted-messages (line-desc-maps)
+  "Remove unwanted messages from LINE-DESC-MAPS."
+  (if (not flycheck-mmc-report-inferred)
+      (-remove #'(lambda (x)
+                   (string-match "nferred" (second x)))
+               line-desc-maps)
+    line-desc-maps))
+
 (defun flycheck-mmc-compute-flycheck-errors (final-list filename buffer)
   "Compute the list fo flycheck-error objects from FINAL-LIST.
 
@@ -184,7 +197,8 @@ for :error-parser functions for Flycheck."
       (let ((line-desc-pairs (flycheck-mmc-compute-line-desc-pairs output)))
         (let ((line-desc-maps (flycheck-mmc-compute-line-desc-maps line-desc-pairs)))
           (let ((final-list (flycheck-mmc-compute-final-list line-desc-maps)))
-            (flycheck-mmc-compute-flycheck-errors final-list filename buffer)))))))
+            (flycheck-mmc-compute-flycheck-errors
+             (flycheck-mmc-remove-unwanted-messages final-list) filename buffer)))))))
 
 (flycheck-define-checker mercury-mmc
   "A Mercury syntax and type checker using mmc.
