@@ -93,6 +93,8 @@ a single source line.  If the specified value is strictly positive, the messages
 are limited to this number of lines and `...` is added as final line. A value
 less than or equal to `0` has no effect. The default value is `0`.
 
+`flycheck-mmc-report-inferred` defines whether type/mode/determinism inference
+(via `--infer-all`) is reported on `info` level. The default value is `t`.
 
 License
 -------
