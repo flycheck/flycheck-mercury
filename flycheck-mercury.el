@@ -180,6 +180,8 @@ Pass FILENAME and BUFFER object to Flycheck."
                                   :checker 'mercury-mmc
                                   :level (cond ((string-match "rror" (cadr x))
                                                 'error)
+                                               ((string-match "mismatch" (cadr x))
+                                                'error)
                                                ((string-match "arning" (cadr x))
                                                 'warning)
                                                ((string-match "nferred" (cadr x))
