@@ -164,7 +164,7 @@ messages for that line number."
   "Remove unwanted messages from LINE-DESC-MAPS."
   (if (not flycheck-mmc-report-inferred)
       (-remove #'(lambda (x)
-                   (string-match "nferred" (second x)))
+                   (string-match "Inferred" (second x)))
                line-desc-maps)
     line-desc-maps))
 
@@ -184,7 +184,7 @@ Pass FILENAME and BUFFER object to Flycheck."
                                                 'error)
                                                ((string-match "arning" (cadr x))
                                                 'warning)
-                                               ((string-match "nferred" (cadr x))
+                                               ((string-match "Inferred" (cadr x))
                                                 'info)
                                                (t 'error))))
           final-list))
