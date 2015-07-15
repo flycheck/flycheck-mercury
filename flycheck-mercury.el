@@ -164,7 +164,9 @@ messages for that line number."
   "Remove unwanted messages from LINE-DESC-MAPS."
   (if (not flycheck-mmc-report-inferred)
       (-remove #'(lambda (x)
-                   (string-match "Inferred" (second x)))
+                   (and (string-match "Inferred" (second x))
+                        (not (string-match "rror" (second x)))
+                        (not (string-match "arning" (second x)))))
                line-desc-maps)
     line-desc-maps))
 
