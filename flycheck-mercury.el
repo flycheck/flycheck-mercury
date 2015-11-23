@@ -107,7 +107,7 @@ Any value less than or equal to zero has no effect."
 OUTPUT is the raw mercury warning / error message output of the
 format: 'filename ':' linenumber ':' errormessage'."
   (mapcar #'(lambda (num-desc)
-              (cons (string-to-number (car num-desc))
+              (cons (string-to-number (cl-first num-desc))
                     (flycheck-mmc-truncate-message-length
                      (s-chop-prefix " "
                                     (-reduce #'(lambda (zeile rest)
@@ -144,9 +144,9 @@ result is grouped for line numbers."
   (mapcar #'flycheck-mmc-truncate-message-lines
           (mapcar #'(lambda (elem)
                       (-filter #'(lambda (x)
-                                   (eq (car x) elem)) line-desc-pairs))
+                                   (eq (cl-first x) elem)) line-desc-pairs))
                   (delete-dups (mapcar #'(lambda (line-desc)
-                                           (car line-desc)) line-desc-pairs)))))
+                                           (cl-first line-desc)) line-desc-pairs)))))
 
 (defun flycheck-mmc-compute-final-list (line-desc-maps)
   "Compute alist from LINE-DESC-MAPS.
@@ -154,7 +154,7 @@ result is grouped for line numbers."
 Computes an alist from the line numbers to the concatenation of
 messages for that line number."
   (mapcar #'(lambda (entry)
-              (list (car (car entry))
+              (list (cl-first (cl-first entry))
                     (-reduce #'(lambda (prefix rest)
                                  (concat prefix rest "\n"))
                              (cons "" (mapcar #'cdr entry)))))
@@ -164,9 +164,9 @@ messages for that line number."
   "Remove unwanted messages from LINE-DESC-MAPS."
   (if (not flycheck-mmc-report-inferred)
       (-remove #'(lambda (x)
-                   (and (string-match "Inferred" (second x))
-                        (not (string-match "rror" (second x)))
-                        (not (string-match "arning" (second x)))))
+                   (and (string-match "Inferred" (cl-second x))
+                        (not (string-match "rror" (cl-second x)))
+                        (not (string-match "arning" (cl-second x)))))
                line-desc-maps)
     line-desc-maps))
 
@@ -175,18 +175,18 @@ messages for that line number."
 
 Pass FILENAME and BUFFER object to Flycheck."
   (mapcar #'(lambda (x)
-              (flycheck-error-new :line (car x)
-                                  :message (cadr x)
+              (flycheck-error-new :line (cl-first x)
+                                  :message (cl-second x)
                                   :filename filename
                                   :buffer buffer
                                   :checker 'mercury-mmc
-                                  :level (cond ((string-match "rror" (cadr x))
+                                  :level (cond ((string-match "rror" (cl-second x))
                                                 'error)
-                                               ((string-match "mismatch" (cadr x))
+                                               ((string-match "mismatch" (cl-second x))
                                                 'error)
-                                               ((string-match "arning" (cadr x))
+                                               ((string-match "arning" (cl-second x))
                                                 'warning)
-                                               ((string-match "Inferred" (cadr x))
+                                               ((string-match "Inferred" (cl-second x))
                                                 'info)
                                                (t 'error))))
           final-list))
@@ -197,7 +197,7 @@ Pass FILENAME and BUFFER object to Flycheck."
 
 Parses the Mercury warning / error output, provides interface
 for :error-parser functions for Flycheck."
-    (let ((filename (first (s-split-up-to ":" output 1))))
+    (let ((filename (cl-first (s-split-up-to ":" output 1))))
       (let ((line-desc-pairs (flycheck-mmc-compute-line-desc-pairs output)))
         (let ((line-desc-maps (flycheck-mmc-compute-line-desc-maps line-desc-pairs)))
           (let ((final-list (flycheck-mmc-compute-final-list line-desc-maps)))
