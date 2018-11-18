@@ -217,7 +217,7 @@ See URL `http://mercurylang.org/'."
                     flycheck-option-int)
             source)
   :error-parser flycheck-mmc-error-parser
-  :modes (mercury-mode prolog-mode))
+  :modes (mercury-mode metal-mercury-mode prolog-mode))
 
 (add-to-list 'flycheck-checkers 'mercury-mmc)
 
